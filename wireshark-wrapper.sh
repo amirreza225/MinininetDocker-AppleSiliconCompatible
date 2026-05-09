@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-if [[ -n "${DISPLAY:-}" ]]; then
+if [[ -n "$DISPLAY" ]]; then
     exec /usr/bin/wireshark "$@"
 fi
 
