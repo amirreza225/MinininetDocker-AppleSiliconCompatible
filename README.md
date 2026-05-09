@@ -240,18 +240,22 @@ wireshark &   # Launches the Wireshark GUI on your Mac
 # Open interactive xterm windows for individual hosts
 mininet> xterm h1 h2
 
-# Capture and inspect traffic on a specific host with Wireshark
+# Capture and inspect traffic on a specific host with Wireshark (GUI if DISPLAY is available)
 mininet> h1 wireshark &
 
-# Or start Wireshark on h1's interface from the CLI
+# Or start capture on h1's interface from the CLI
 mininet> h1 wireshark -i h1-eth0 &
 ```
+
+In headless Linux environments (no `DISPLAY`), the `wireshark` command
+automatically falls back to `tshark` so capture commands still work.
 
 ### Troubleshooting display issues
 
 | Symptom | Fix |
 |---------|-----|
 | `Error: Can't open display` | Make sure XQuartz is running and you ran `xhost +localhost` |
+| Headless Linux / CI runner (no GUI) | Use `h1 wireshark -i h1-eth0` as usual; it auto-falls back to `tshark` |
 | Window appears then closes | XQuartz Security setting "Allow network clients" may not be enabled — restart XQuartz after enabling it |
 | `Authorization required` | Run `xhost +localhost` again in a Mac Terminal |
 | Works but very slow | Normal for the first launch; subsequent windows open faster |

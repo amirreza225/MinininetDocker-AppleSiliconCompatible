@@ -64,12 +64,13 @@ RUN git clone https://github.com/mininet/mininet.git /tmp/mininet && \
     echo "Mininet installation completed" && \
     rm -rf /tmp/mininet
 
-# Install X11 support, xterm, and Wireshark for display forwarding on macOS
+# Install X11 support, xterm, and Wireshark/tshark for packet capture
 RUN echo "wireshark-common wireshark-common/install-setuid boolean false" | debconf-set-selections && \
     apt-get update && apt-get install -y \
     x11-apps \
     xterm \
     wireshark \
+    tshark \
     && rm -rf /var/lib/apt/lists/*
 
 # Create working directory
@@ -77,8 +78,9 @@ WORKDIR /app
 
 # Copy startup script and examples
 COPY start_services.sh /app/start_services.sh
+COPY wireshark-wrapper.sh /usr/local/bin/wireshark
 COPY examples/ /app/examples/
-RUN chmod +x /app/start_services.sh
+RUN chmod +x /app/start_services.sh /usr/local/bin/wireshark
 
 # Create python symlink for compatibility with mn command
 RUN ln -s /usr/bin/python3 /usr/bin/python
