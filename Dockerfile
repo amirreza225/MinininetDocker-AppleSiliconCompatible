@@ -90,6 +90,7 @@ ENV MININET_PATH="/usr/local/lib/python3.8/site-packages"
 # Create a user for running mininet (optional, for security)
 RUN useradd -m -s /bin/bash mininet && \
     echo "mininet ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers && \
+    (getent group wireshark >/dev/null || groupadd wireshark) && \
     usermod -a -G wireshark mininet
 
 # Expose common ports
