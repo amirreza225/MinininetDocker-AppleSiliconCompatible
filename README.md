@@ -249,7 +249,8 @@ mininet> h1 wireshark -i h1-eth0 &
 
 In headless Linux environments (no `DISPLAY`), the `wireshark` command
 automatically falls back to `tshark` so capture commands still work.
-Because `tshark` is CLI-based, some Wireshark GUI-specific flags/behaviors may differ.
+Because `tshark` is CLI-based, GUI-only behavior (packet list/details panes and
+interactive clicks) is unavailable; use terminal output or `-w capture.pcap`.
 
 ### Troubleshooting display issues
 
