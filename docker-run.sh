@@ -21,6 +21,46 @@ build() {
     echo "Build complete!"
 }
 
+# Determine the correct DISPLAY value for X11 forwarding.
+# On macOS (Apple Silicon / Intel), Docker runs inside a VM so the
+# Unix socket cannot be shared; use the TCP address via host.docker.internal.
+# On Linux the existing DISPLAY environment variable works directly.
+get_display() {
+    if [[ "$(uname)" == "Darwin" ]]; then
+        echo "host.docker.internal:0"
+    else
+        echo "${DISPLAY:-:0}"
+    fi
+}
+
+# Print X11 setup reminder when on macOS
+print_display_hint() {
+    if [[ "$(uname)" == "Darwin" ]]; then
+        echo ""
+        echo "╔══════════════════════════════════════════════════════════════╗"
+        echo "║  X11 Display Forwarding (xterm / Wireshark) on macOS        ║"
+        echo "║                                                              ║"
+        echo "║  One-time setup (only needed once):                         ║"
+        echo "║  1. Install XQuartz:  brew install --cask xquartz           ║"
+        echo "║     Then LOG OUT and back in (or reboot).                   ║"
+        echo "║  2. Open XQuartz → Settings → Security                      ║"
+        echo "║     ✓ Check \"Allow connections from network clients\"         ║"
+        echo "║     Restart XQuartz after changing this setting.            ║"
+        echo "║  3. In a Mac Terminal (not inside Docker):                  ║"
+        echo "║       xhost +localhost                                       ║"
+        echo "║                                                              ║"
+        echo "║  Inside the container you can then run:                     ║"
+        echo "║    xclock &          ← quick X11 test                       ║"
+        echo "║    xterm &           ← open a terminal window               ║"
+        echo "║    wireshark &       ← launch Wireshark GUI                 ║"
+        echo "║                                                              ║"
+        echo "║  From the Mininet prompt:                                    ║"
+        echo "║    mininet> xterm h1 h2   ← open xterms for hosts h1, h2   ║"
+        echo "╚══════════════════════════════════════════════════════════════╝"
+        echo ""
+    fi
+}
+
 # Run the container
 run() {
     check_docker
@@ -37,10 +77,13 @@ run() {
         docker rm $CONTAINER_NAME
     fi
     
+    print_display_hint
+
     echo "Starting new Mininet container..."
     docker run -it --privileged \
         --name $CONTAINER_NAME \
         --network host \
+        -e DISPLAY="$(get_display)" \
         -v "$(pwd)/projects:/app/projects" \
         -v "/lib/modules:/lib/modules:ro" \
         $IMAGE_NAME

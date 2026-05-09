@@ -64,6 +64,14 @@ RUN git clone https://github.com/mininet/mininet.git /tmp/mininet && \
     echo "Mininet installation completed" && \
     rm -rf /tmp/mininet
 
+# Install X11 support, xterm, and Wireshark for display forwarding on macOS
+RUN echo "wireshark-common wireshark-common/install-setuid boolean false" | debconf-set-selections && \
+    apt-get update && apt-get install -y \
+    x11-apps \
+    xterm \
+    wireshark \
+    && rm -rf /var/lib/apt/lists/*
+
 # Create working directory
 WORKDIR /app
 
@@ -81,7 +89,8 @@ ENV MININET_PATH="/usr/local/lib/python3.8/site-packages"
 
 # Create a user for running mininet (optional, for security)
 RUN useradd -m -s /bin/bash mininet && \
-    echo "mininet ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+    echo "mininet ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers && \
+    usermod -a -G wireshark mininet
 
 # Expose common ports
 EXPOSE 6653 8080 8000

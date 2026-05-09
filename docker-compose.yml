@@ -10,7 +10,11 @@ services:
       - ./projects:/app/projects
       - /lib/modules:/lib/modules:ro
     environment:
-      - DISPLAY=${DISPLAY:-}
+      # On macOS (Apple Silicon / Intel) Docker runs inside a Linux VM, so the
+      # Unix X11 socket is not reachable from inside the container.
+      # Use host.docker.internal:0 to reach XQuartz over TCP instead.
+      # On Linux, override this with your actual $DISPLAY value.
+      - DISPLAY=${DISPLAY:-host.docker.internal:0}
     stdin_open: true
     tty: true
     command: /bin/bash
