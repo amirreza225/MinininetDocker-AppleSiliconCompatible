@@ -41,7 +41,7 @@ echo "  wireshark &                                # Launch Wireshark GUI (or ts
 echo ""
 echo "From the Mininet CLI:"
 echo "  mininet> xterm h1 h2                       # Open xterms for h1 and h2"
-echo "  mininet> h1 wireshark &                    # GUI on display hosts; tshark fallback on headless hosts"
+echo "  mininet> h1 wireshark &                    # GUI when DISPLAY is set; tshark fallback when DISPLAY is unset"
 echo ""
 echo "Container ready for SDN development!"
 echo ""
