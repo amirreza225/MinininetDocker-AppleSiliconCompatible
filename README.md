@@ -255,7 +255,7 @@ automatically falls back to `tshark` so capture commands still work.
 | Symptom | Fix |
 |---------|-----|
 | `Error: Can't open display` | Make sure XQuartz is running and you ran `xhost +localhost` |
-| Headless Linux / CI runner (no GUI) | Use `h1 wireshark -i h1-eth0` as usual; it auto-falls back to `tshark` |
+| Headless Linux / CI runner (no GUI) | Use `h1 wireshark -i h1-eth0` as usual; it automatically falls back to `tshark` |
 | Window appears then closes | XQuartz Security setting "Allow network clients" may not be enabled — restart XQuartz after enabling it |
 | `Authorization required` | Run `xhost +localhost` again in a Mac Terminal |
 | Works but very slow | Normal for the first launch; subsequent windows open faster |
