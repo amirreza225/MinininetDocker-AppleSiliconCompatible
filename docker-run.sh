@@ -55,7 +55,7 @@ print_display_hint() {
         echo "║    wireshark &       ← launch Wireshark GUI                 ║"
         echo "║                                                              ║"
         echo "║  From the Mininet prompt:                                    ║"
-        echo "║    mininet> xterm h1 h2   ← open xterms for hosts h1, h2   ║"
+        echo "║    mininet> xterm h1 h2   ← open xterms for hosts h1, h2     ║"
         echo "╚══════════════════════════════════════════════════════════════╝"
         echo ""
     fi
