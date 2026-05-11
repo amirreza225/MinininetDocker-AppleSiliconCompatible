@@ -120,6 +120,29 @@ sudo mn --link tc,bw=10
 sudo mn --topo linear,4
 ```
 
+### Inspecting Network Traffic with Wireshark
+
+Two ways to capture traffic:
+
+**From the container shell** — sees all Mininet interfaces at once:
+
+```bash
+# In a second terminal, open a container shell
+./docker-run.sh shell
+
+# Launch Wireshark and select a host interface (e.g. h1-eth0, s1-eth1)
+wireshark &
+```
+
+**From inside Mininet** — scoped to a specific host's namespace:
+
+```bash
+mininet> h1 wireshark &
+mininet> h1 wireshark -i h1-eth0 &
+```
+
+Wireshark GUI requires X11/XQuartz on macOS — see [Display Forwarding](#display-forwarding--xterm--wireshark-on-macos-apple-silicon). In headless environments it falls back to `tshark` automatically.
+
 ### SDN Controller Development
 
 ```bash
@@ -240,10 +263,10 @@ wireshark &   # Launches the Wireshark GUI on your Mac
 # Open interactive xterm windows for individual hosts
 mininet> xterm h1 h2
 
-# Capture and inspect traffic on a specific host with Wireshark (GUI if DISPLAY is available)
+# Launch Wireshark GUI on a specific host
 mininet> h1 wireshark &
 
-# Or start capture on h1's interface from the CLI
+# Capture on a specific interface directly
 mininet> h1 wireshark -i h1-eth0 &
 ```
 
@@ -254,13 +277,13 @@ interactive clicks) is unavailable; use terminal output or `-w capture.pcap`.
 
 ### Troubleshooting display issues
 
-| Symptom | Fix |
-|---------|-----|
-| `Error: Can't open display` | Make sure XQuartz is running and you ran `xhost +localhost` |
-| Headless Linux / CI runner (no GUI) | Use `h1 wireshark -i h1-eth0` as usual; it automatically falls back to `tshark` |
-| Window appears then closes | XQuartz Security setting "Allow network clients" may not be enabled — restart XQuartz after enabling it |
-| `Authorization required` | Run `xhost +localhost` again in a Mac Terminal |
-| Works but very slow | Normal for the first launch; subsequent windows open faster |
+| Symptom                             | Fix                                                                                                     |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `Error: Can't open display`         | Make sure XQuartz is running and you ran `xhost +localhost`                                             |
+| Headless Linux / CI runner (no GUI) | Use `h1 wireshark -i h1-eth0` as usual; it automatically falls back to `tshark`                         |
+| Window appears then closes          | XQuartz Security setting "Allow network clients" may not be enabled — restart XQuartz after enabling it |
+| `Authorization required`            | Run `xhost +localhost` again in a Mac Terminal                                                          |
+| Works but very slow                 | Normal for the first launch; subsequent windows open faster                                             |
 
 ---
 

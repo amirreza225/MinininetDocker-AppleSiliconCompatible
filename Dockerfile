@@ -69,6 +69,7 @@ RUN echo "wireshark-common wireshark-common/install-setuid boolean false" | debc
     apt-get update && apt-get install -y \
     x11-apps \
     xterm \
+    socat \
     wireshark \
     tshark \
     && rm -rf /var/lib/apt/lists/*
@@ -92,6 +93,7 @@ ENV MININET_PATH="/usr/local/lib/python3.8/site-packages"
 # Create a user for running mininet (optional, for security)
 RUN useradd -m -s /bin/bash mininet && \
     echo "mininet ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers && \
+    echo 'Defaults env_keep += "DISPLAY XAUTHORITY"' >> /etc/sudoers && \
     (getent group wireshark >/dev/null || groupadd wireshark) && \
     usermod -a -G wireshark mininet
 
